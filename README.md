@@ -12,6 +12,7 @@ The backend will frequently spin down to zero instances, so when executing the d
 
 ### API Client
 I've generated the classes in the `apis`, `infrastructure` and `models` folders using the [OpenAPI generator](https://github.com/OpenAPITools/openapi-generator), which accepts OpenAPI (formerly Swagger) documentation URLs and produces generated client code.
-The command for generating these is `penapi-generator generate -g kotlin --additional-properties packageName=com.diveinsoft.blog.headers,library=jvm-retrofit2,serializationLibrary=gson --skip-validate-spec -i http://localhost:8080/v3/api-doc`.  
+The command for generating these is 
+`openapi-generator generate -g kotlin --additional-properties packageName=com.diveinsoft.blog.headers,library=jvm-retrofit2,serializationLibrary=gson --skip-validate-spec -i http://localhost:8080/v3/api-doc`.  
 You can also use the GAE-hosted URL to generate these files, as well.
 
