@@ -36,11 +36,6 @@ class RequestsViewModel @Inject constructor (
     private var customerService: CustomerControllerApi,
     private var promotionService: PromotionControllerApi
 ): ViewModel() {
-    private val _uiState = MutableStateFlow(listOf(
-        ApiDisplayBlock("Orders Data"),
-        ApiDisplayBlock("Customer Data"),
-        ApiDisplayBlock("Promotions Data")
-    ))
     private val _productState = MutableStateFlow(ApiDisplayBlock(""))
     val productDisplay: StateFlow<ApiDisplayBlock> = _productState.asStateFlow()
     private val _orderState = MutableStateFlow(ApiDisplayBlock(""))
@@ -49,6 +44,8 @@ class RequestsViewModel @Inject constructor (
     val customerDisplay: StateFlow<ApiDisplayBlock> = _customerState.asStateFlow()
     private val _promotionState = MutableStateFlow(ApiDisplayBlock(""))
     val promotionDisplay: StateFlow<ApiDisplayBlock> = _promotionState.asStateFlow()
+    private val _useV2APIState = MutableStateFlow(false)
+    val useV2APIFlag: StateFlow<Boolean> = _useV2APIState.asStateFlow()
     // Operations
 
     /**
@@ -56,11 +53,16 @@ class RequestsViewModel @Inject constructor (
      */
     fun retrieveProductData() {
         viewModelScope.launch(Dispatchers.IO) {
-            val resp = productService.getProductById(2)
+            val op = if (useV2APIFlag.value) productService.getProductByIdWithCache(2) else productService.getProductById(2)
+            val resp = op
                 .execute()
             if (resp.isSuccessful) {
                 val dt = resp.raw().header("Date", "") ?: ""
-                val cc = resp.raw().header("Cache-Control", "-") ?: "-"
+                var cacheHdr = resp.raw().header("Cache-Control")
+                if (cacheHdr == null && resp.raw().header("Etag") != null) {
+                    cacheHdr = "Etag: ${resp.raw().header("Etag")}"
+                }
+                val cc = cacheHdr ?: "-"
                 val displayStr = resp.body()?.description ?: ""
                 _productState.update { currentProduct ->
                     currentProduct.copy(
@@ -137,5 +139,9 @@ class RequestsViewModel @Inject constructor (
                 }
             }
         }
+    }
+
+    fun toggleV2API(newVal: Boolean) {
+        this._useV2APIState.value = newVal
     }
 }

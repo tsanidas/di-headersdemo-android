@@ -1,9 +1,10 @@
 # Headers Demo for Android
-Demonstrates behavior with values of 'Cache-Control' response headers on Android using Retrofit/OkHttp.
-For more info and explanations of how 'Cache-Control' response header values affect
-your apps, see [Use Your Headers](https://blog.diveinsoft.com/2024/04/for-on-device-caching-use-your-headers.html)
+Demonstrates behavior with values of 'Cache-Control' and 'Etag" response headers on Android using Retrofit2/OkHttp.
+For more info and explanations of how these response header values affect
+your Android apps, see [Use Your Headers](https://blog.diveinsoft.com/2024/04/for-on-device-caching-use-your-headers.html) and [Just in Time On-Device Caching with ETAG](https://blog.diveinsoft.com/2024/05/just-in-time-on-device-caching-with-etag.html)
 
-See the blog post entry on how to perform the forensics on viewing cache data in the emulator.
+
+See the blog post entries on how to perform the forensics on viewing cache data in the emulator.
 
 
 ## API Layer

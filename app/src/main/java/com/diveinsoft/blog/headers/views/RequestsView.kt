@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,8 +40,24 @@ fun RequestsView(vm: RequestsViewModel = viewModel()) {
     val orderDisplayState by vm.orderDisplay.collectAsState()
     val customerDisplayState by vm.customerDisplay.collectAsState()
     val promoDisplayState by vm.promotionDisplay.collectAsState()
+    val useV2APIState by vm.useV2APIFlag.collectAsState()
 
     Column(verticalArrangement = Arrangement.Top) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = rowModifier()
+        ) {
+            Column(modifier = Modifier.weight(0.36F, true)) {
+                Text(text = "Use V2 API",
+                    fontWeight = FontWeight.Bold)
+            }
+            Switch(
+                checked = useV2APIState,
+                onCheckedChange = {
+                    vm.toggleV2API(it)
+                },
+            )
+        }
         ApiListItem(
             headline = "Product Data",
             description = productDisplayState.displayString,
@@ -90,10 +107,7 @@ fun ApiListItem(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(1F)
-            .padding(2.dp)
-            .border(1.dp, MaterialTheme.colorScheme.outline, shape = RoundedCornerShape(8.dp))
-            .padding(8.dp)
+        modifier = rowModifier()
     ) {
         Column(modifier = Modifier.weight(0.36F, true)) {
             Text(text = headline,
@@ -124,6 +138,14 @@ fun ApiListItem(
     }
 }
 
+@Composable
+private fun rowModifier(): Modifier {
+    return Modifier
+        .fillMaxWidth(1F)
+        .padding(2.dp)
+        .border(1.dp, MaterialTheme.colorScheme.outline, shape = RoundedCornerShape(8.dp))
+        .padding(8.dp)
+}
 
 @Preview(
     name = "Regular Mode",
@@ -134,6 +156,21 @@ fun ApiListItem(
 fun RequestsViewPreview() {
     CacheHeadersDemoTheme {
         Column {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = rowModifier()
+            ) {
+                Column(modifier = Modifier.weight(0.36F, true)) {
+                    Text(text = "Use V2 API",
+                        fontWeight = FontWeight.Bold)
+                }
+                //Spacer(modifier = Modifier.width(40.dp))
+                Switch(
+                    checked = false,
+                    onCheckedChange = {
+                    },
+                )
+            }
             ApiListItem(
                 headline = "Product Data",
                 description = "ProV1 Golf Balls",
